@@ -1,0 +1,353 @@
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+struct node
+{
+	int data;
+	struct node *next;
+}*head,*temphead;
+
+void create_linklist();
+void printlinklist();
+void insert_begning();
+void insert_end();
+void shorted_node();
+void any_pos();
+int count_node();
+void search();
+void delete_node();
+
+void main()
+{
+	int n,choice;
+	clrscr();
+	head = (struct node *)malloc(sizeof(struct node));
+	head->next=NULL;
+	while(1)
+	{
+		printf("\npress (1) for create linklist\npress (2) for insert node at the begning\npress (3) for insert node at the end\npress (4) for insert node in shorted form\npress (5) for insert node at given position\npress (6) for counting the number of nodes\npress (7) for searching\npress (8) for deleting a node\npress (10) for exit: ");
+		scanf("%d",&choice);
+		if(choice==1)
+		{
+			create_linklist();
+		}
+		else if(choice==2)
+		{
+			insert_begning();
+		}
+		else if(choice==3)
+		{
+			insert_end();
+		}
+		else if(choice==4)
+		{
+			shorted_node();
+		}
+		else if(choice==5)
+		{
+			any_pos();
+		}
+		else if(choice==6)
+		{
+			count_node();
+		}
+		else if(choice==7)
+		{
+			search();
+		}
+		else if(choice==8)
+		{
+			delete_node();
+		}
+		else if(choice==10)
+		{
+			break;
+		}
+		printlinklist();
+	}
+	getch();
+}
+
+void create_linklist()
+{
+	int n,data,i;
+	struct node *newnode, *temp;
+
+	printf("Enter the total number of nodes: ");
+	scanf("%d", &n);
+
+
+	if(head == NULL)
+	{
+		printf("Unable to allocate memory.");
+		exit(0);
+	}
+	printf("Enter the data of node 1: ");
+	scanf("%d", &data);
+
+	head->data = data;
+	head->next = NULL;
+	temp = head;
+	for(i=2; i<=n; i++)
+	{
+		newnode = (struct node *)malloc(sizeof(struct node));
+		if(newnode == NULL)
+		{
+			printf("Unable to allocate memory.");
+			break;
+		}
+
+		printf("Enter the data of node %d: ", i);
+		scanf("%d", &data);
+
+		newnode->data = data;
+		newnode->next = NULL;
+
+		temp->next = newnode;
+		temp = temp->next;
+	}
+}
+void insert_begning()
+{
+	struct node *newnode,*temp;
+	newnode = (struct node *)malloc(sizeof(struct node));
+	printf("\nenter data: ");
+	scanf("%d",&(newnode->data));
+	temp=head;
+	head=newnode;
+	newnode->next=temp;
+}
+
+void insert_end()
+{
+	struct node *newnode,*temp,*temphead;
+	temphead=head;
+	newnode = (struct node *)malloc(sizeof(struct node));
+	printf("\nenter data: ");
+	scanf("%d",&(newnode->data));
+	while(temphead->next !=NULL)
+	{
+		temphead=temphead->next;
+	}
+	temphead->next=newnode;
+	newnode->next=NULL;
+}
+
+
+void printlinklist()
+{
+	struct node *temp;
+	if(head == NULL)
+	{
+		printf("List is empty");
+		return;
+	}
+	temp = head;
+	while(temp != NULL)
+	{
+		printf("Data = %d\n", temp->data);
+		temp = temp->next;
+	}
+}
+void shorted_node()
+{
+	int n,data,i;
+	struct node *newnode;
+	temphead=head;
+	printf("Enter the total number of nodes: ");
+	scanf("%d", &n);
+	temphead=(struct node *)malloc(sizeof(struct node));
+	printf("Enter the data: ");
+	scanf("%d", &(head->data));
+	head->next=NULL;
+	temphead=head;
+	if(n>1)
+	{
+	newnode=(struct node *)malloc(sizeof(struct node));
+	printf("Enter the data: ");
+	scanf("%d", &(newnode->data));
+	if(temphead->next==NULL)
+	{
+		if((temphead->data)<(newnode->data))
+		{
+			newnode->next=NULL;
+			temphead->next=newnode;
+			head=temphead;
+		}
+		else
+		{
+			newnode->next=temphead;
+			head=newnode;
+		}
+	}
+	}
+	temphead=head;
+	for(i=3;i<=n;i++)
+	{
+		newnode=(struct node *)malloc(sizeof(struct node));
+		printf("Enter the data: ");
+		scanf("%d", &(newnode->data));
+
+		while((temphead->next)!=NULL)
+		{
+			if( ((newnode->data)>(temphead->data))&&((newnode->data)<((temphead->next)->data)))
+			{
+				newnode->next=temphead->next;
+				temphead->next=newnode;
+				break;
+			}
+			else if( ((newnode->data)==(temphead->data))&&((newnode->data)<((temphead->next)->data)))
+			{
+				newnode->next=temphead->next;
+				temphead->next=newnode;
+				break;
+			}
+			else if( ((newnode->data)>(temphead->data))&&((newnode->data)==
+			((temphead->next)->data)))
+			{
+				newnode->next=temphead->next;
+				temphead->next=newnode;
+				break;
+			}
+
+			else if((newnode->data)<(temphead->data))
+			{
+				newnode->next=temphead;
+				head=newnode;
+				break;
+			}
+			temphead=temphead->next;
+		}
+		if(temphead->next==NULL)
+		{
+			temphead->next=newnode;
+			newnode->next=NULL;
+		}
+		temphead=head;
+	}
+
+}
+int count_node()
+{
+	struct node *temp;
+	int i=0;
+	temp = head;
+	while(temp!= NULL)
+	{
+		i++;
+		temp = temp->next;
+	}
+	printf("\nThere are %d nodes\n",i);
+	return i;
+}
+
+void any_pos()
+{
+	struct node *newnode,*temp;
+	int pos,i,j=1;
+	newnode = (struct node *)malloc(sizeof(struct node));
+	printf("\nenter position: ");
+	scanf("%d",&pos);
+	printf("\nenter data: ");
+	scanf("%d",&(newnode->data));
+	temp=head;
+	if(head->next==NULL)
+	{
+		head->data=newnode->data;
+	}
+	else
+	{
+	for(i=1;temp->next!=NULL;i++)
+	{
+		if(pos==1)
+		{
+			newnode->next=head;
+			head=newnode;
+			break;
+		}
+		else if (pos>count_node())
+		{
+			while(temp->next!=NULL)
+			{
+				temp=temp->next;
+			}
+			temp->next=newnode;
+			newnode->next=NULL;
+		}
+		else
+		{
+			while(j<pos-1)
+			{
+				temp=temp->next;
+				j++;
+			}
+			newnode->next=temp->next;
+			temp->next=newnode;
+			break;
+		}
+	}
+	}
+}
+void search()
+{
+	struct node *temp;
+	int value;
+	temp = head;
+	printf("enter value to be searched: ");
+	scanf("%d",&value);
+	while(temp->next!= NULL)
+	{
+		if(temp->data==value)
+		{
+			printf("\nfound\n");
+			return;
+		}
+		temp = temp->next;
+	}
+	if(temp->data==value)
+	{
+		printf("\nfound\n");
+		return;
+	}
+	else
+	{
+		printf("\nnot found\n");
+		return;
+	}
+}
+void delete_node()
+{
+	struct node *temp,*temp2;
+	int value;
+	temp = head;
+	temp2=temp;
+	printf("enter value to be deleted: ");
+	scanf("%d",&value);
+	if(temp->data==value)
+	{
+		head=temp->next;
+		return;
+	}
+	while(temp->next!= NULL)
+	{
+
+		if(temp->data==value)
+		{
+			temp2->next=temp->next;
+			return;
+		}
+		temp2=temp;
+		temp = temp->next;
+	}
+	if(temp->data==value)
+	{
+		temp2->next=NULL;
+		return;
+	}
+	else
+	{
+		printf("\nnot found\n");
+		return;
+	}
+
+}
